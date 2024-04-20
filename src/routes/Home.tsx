@@ -66,6 +66,7 @@ export default function Home() {
           city={room.city}
           country={room.country}
           price={room.price}
+          pk={room.pk}
         />
       ))}
     </Grid>

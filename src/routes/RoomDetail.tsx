@@ -19,9 +19,8 @@ interface IRoom {
 export default function RoomDetail() {
   const {roomPK} = useParams();
   const {isLoading, data: roomDetailData} = useQuery<IRoom>({
-    queryKey: ['roomDetail'],
+    queryKey: ['roomPk', roomPK],
     queryFn: getRoomDetail,
   });
-  console.log(roomDetailData);
   return <h1>Hi</h1>;
 }

@@ -2,7 +2,7 @@ import {useQuery} from '@tanstack/react-query';
 import {useParams} from 'react-router-dom';
 import {getRoomDetail, getRoomReviews} from '../api';
 import {IRoomDetail, IReview} from '../types';
-import {Box, Grid, Heading, Skeleton, Image, GridItem, VStack, Text, HStack, Avatar} from '@chakra-ui/react';
+import {Box, Grid, Heading, Skeleton, Image, GridItem, VStack, Text, HStack, Avatar, Container} from '@chakra-ui/react';
 import {FaStar} from 'react-icons/fa';
 
 export default function RoomDetail() {
@@ -12,8 +12,8 @@ export default function RoomDetail() {
     queryFn: getRoomDetail,
   });
   const {isLoading: isReviewsLoading, data: roomReviewsData} = useQuery<IReview[]>({
-    queryKey: ['roomPk', roomPK],
-    queryFn: getRoomDetail,
+    queryKey: ['rooms', roomPK, `reviews`],
+    queryFn: getRoomReviews,
   });
   return (
     <Box mt={10} px={{base: 10, lg: 40}}>
@@ -57,7 +57,7 @@ export default function RoomDetail() {
         <Avatar name={roomDetailData?.owner.name} size={'xl'} src={roomDetailData?.owner.avatar} />
       </HStack>
       <Box mt={10}>
-        <Heading fontSize={'2xl'}>
+        <Heading fontSize={'2xl'} mb={5}>
           <HStack>
             <FaStar />
             <Text>{roomDetailData?.rating}</Text>
@@ -67,6 +67,27 @@ export default function RoomDetail() {
             </Text>
           </HStack>
         </Heading>
+        <Container mt={16} maxW="container.lg" marginX="none">
+          <Grid gap={10} templateColumns={'1fr 1fr'}>
+            {roomReviewsData?.map((review, index) => (
+              <VStack alignItems={'flex-start'} key={index}>
+                <HStack>
+                  <Skeleton isLoaded={!isReviewsLoading} h="100%" w="100%">
+                    <Avatar name={review.user.name} src={review.user.avatar} size="md" />
+                  </Skeleton>
+                  <VStack spacing={0} alignItems={'flex-start'}>
+                    <Heading fontSize={'md'}>{review.user.name}</Heading>
+                    <HStack spacing={1}>
+                      <FaStar size="12px" />
+                      <Text>{review.rating}</Text>
+                    </HStack>
+                  </VStack>
+                </HStack>
+                <Text>{review.payload}</Text>
+              </VStack>
+            ))}
+          </Grid>
+        </Container>
       </Box>
     </Box>
   );

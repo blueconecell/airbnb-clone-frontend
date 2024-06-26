@@ -1,11 +1,17 @@
-import {useQuery} from '@tanstack/react-query';
-import {getMe} from '../api';
+import { useQuery } from '@tanstack/react-query';
+import { getMe } from '../api';
+import { IUser } from '../types';
 
 export default function useUser() {
-  const {isLoading, data: meData, isError} = useQuery({queryKey: [`me`], queryFn: getMe, retry: false});
+  const { isLoading, data, isError } = useQuery<IUser>({
+    queryKey: ['me'],
+    queryFn: getMe,
+    retry: false,
+  });
+
   return {
     userLoading: isLoading,
-    user: meData,
+    user: data,
     isLoggedIn: !isError,
   };
 }

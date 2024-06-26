@@ -1,4 +1,4 @@
-import {FaAirbnb, FaMoon, FaSun} from 'react-icons/fa';
+import { FaAirbnb, FaMoon, FaSun } from 'react-icons/fa';
 import {
   Box,
   Button,
@@ -10,19 +10,46 @@ import {
   useColorMode,
   useColorModeValue,
   Avatar,
+  Skeleton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  useToast,
 } from '@chakra-ui/react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import LoginModal from './LoginModal';
 import SignUpModal from './SignUpModal';
 import useUser from '../lib/useUser';
+import { logOut } from '../api';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Header() {
-  const {userLoading, isLoggedIn, user} = useUser();
-  const {isOpen: isLoginOpen, onClose: onLoginClose, onOpen: onLoginOpen} = useDisclosure();
-  const {isOpen: isSignUpOpen, onClose: onSignUpClose, onOpen: onSignUpOpen} = useDisclosure();
-  const {toggleColorMode} = useColorMode();
+  const { userLoading, isLoggedIn, user } = useUser();
+  const { isOpen: isLoginOpen, onClose: onLoginClose, onOpen: onLoginOpen } = useDisclosure();
+  const { isOpen: isSignUpOpen, onClose: onSignUpClose, onOpen: onSignUpOpen } = useDisclosure();
+  const { toggleColorMode } = useColorMode();
   const logoColor = useColorModeValue('red.500', 'red.200');
   const Icon = useColorModeValue(FaMoon, FaSun);
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const onLogOut = async () => {
+    const toastId = toast({
+      title: 'Login out...',
+      description: 'sad to see you go...',
+      status: 'loading',
+      position: 'top-right',
+    });
+    await logOut();
+    queryClient.refetchQueries({ queryKey: ['me'] });
+    toast.update(toastId, {
+      title: 'Good Bye!',
+      description: 'See you later!',
+      status: 'success',
+      position: 'top-right',
+      duration: 2000,
+    });
+  };
   return (
     <Stack
       justifyContent={'space-between'}
@@ -37,8 +64,7 @@ export default function Header() {
         sm: 4,
         md: 0,
       }}
-      borderBottomWidth={1}
-    >
+      borderBottomWidth={1}>
       <Box color={logoColor}>
         <Link to={'/'}>
           <FaAirbnb size={'48'} />
@@ -50,7 +76,6 @@ export default function Header() {
         {!userLoading ? (
           !isLoggedIn ? (
             <>
-              {' '}
               <Button onClick={onLoginOpen}>Log in</Button>
               <LightMode>
                 <Button onClick={onSignUpOpen} colorScheme={'red'}>
@@ -59,9 +84,18 @@ export default function Header() {
               </LightMode>
             </>
           ) : (
-            <Avatar size={'md'} />
+            <Menu>
+              <MenuButton>
+                <Avatar name={user?.avatar} src={user?.avatar} size={'md'} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={onLogOut}>Log out</MenuItem>
+              </MenuList>
+            </Menu>
           )
-        ) : null}
+        ) : (
+          <Skeleton />
+        )}
       </HStack>
       <LoginModal isOpen={isLoginOpen} onClose={onLoginClose} />
       <SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose} />

@@ -27,3 +27,15 @@ export const logOut = () =>
       },
     })
     .then((response) => response.data);
+export const githubLogin = (code: string) =>
+  instance
+    .post(
+      `/users/github`,
+      { code },
+      {
+        headers: {
+          'X-CSRFToken': Cookie.get('csrftoken') || '',
+        },
+      }
+    )
+    .then((response) => response.status);

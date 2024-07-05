@@ -1,5 +1,4 @@
 import { Box, Grid, HStack, Skeleton, SkeletonText } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import Room from '../components/Room';
 import RoomSkeleton from '../components/RoomSkeleton';
 import { useQuery } from '@tanstack/react-query';
@@ -59,7 +58,8 @@ export default function Home() {
       ) : null}
       {roomsData?.map((room) => (
         <Room
-          imageUrl={room.photos[0].file}
+          imageUrl={room.photos[0]?.file}
+          isOwner={room.is_owner}
           name={room.name}
           rating={room.rating}
           city={room.city}

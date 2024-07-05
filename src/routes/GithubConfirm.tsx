@@ -18,7 +18,7 @@ export default function GithubConfirm() {
         toast({
           status: 'success',
           title: 'Welcome!',
-          position: 'top-right',
+          position: 'top',
           description: 'Happy to Login',
         });
         queryClient.refetchQueries({ queryKey: ['me'] });

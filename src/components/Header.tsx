@@ -43,7 +43,7 @@ export default function Header() {
         title: 'Login out...',
         description: 'sad to see you go...',
         status: 'loading',
-        position: 'top-right',
+        position: 'top',
       });
     },
     onSuccess: () => {
@@ -53,7 +53,7 @@ export default function Header() {
           title: 'Good Bye!',
           description: 'See you later!',
           status: 'success',
-          position: 'top-right',
+          position: 'top',
           duration: 2000,
         });
       }
@@ -101,6 +101,12 @@ export default function Header() {
                 <Avatar name={user?.avatar} src={user?.avatar} size={'md'} />
               </MenuButton>
               <MenuList>
+                {user?.is_host ? (
+                  <Link to="/rooms/upload">
+                    {' '}
+                    <MenuItem>Upload Room</MenuItem>
+                  </Link>
+                ) : null}
                 <MenuItem onClick={onLogOut}>Log out</MenuItem>
               </MenuList>
             </Menu>

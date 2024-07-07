@@ -18,7 +18,9 @@ import {
 import { FaStar } from 'react-icons/fa';
 
 export default function RoomDetail() {
+  const BASIC_HOUSE_IMG = 'https://i.pinimg.com/736x/98/58/f3/9858f37662de08511199dd7712494133.jpg';
   const { roomPK } = useParams();
+  console.log('roomPK', roomPK);
   const { isLoading, data: roomDetailData } = useQuery<IRoomDetail>({
     queryKey: ['roomPk', roomPK],
     queryFn: getRoomDetail,
@@ -27,6 +29,8 @@ export default function RoomDetail() {
     queryKey: ['rooms', roomPK, `reviews`],
     queryFn: getRoomReviews,
   });
+
+  console.log('roomDetailData', roomDetailData);
   return (
     <Box mt={10} px={{ base: 10, lg: 40 }}>
       <Skeleton isLoaded={!isLoading} h={'43px'} w={'25%'}>
@@ -44,7 +48,15 @@ export default function RoomDetail() {
           <GridItem colSpan={index === 0 ? 2 : 1} rowSpan={index === 0 ? 2 : 1} overflow={'hidden'} key={index}>
             <Skeleton isLoaded={!isLoading} h="100%" w="100%">
               {roomDetailData?.photos && roomDetailData.photos.length > 0 ? (
-                <Image objectFit={'cover'} w="100%" h="100%" src={roomDetailData?.photos[index].file} />
+                roomDetailData.photos.length < 5 ? (
+                  index < roomDetailData.photos.length ? (
+                    <Image objectFit={'cover'} w="100%" h="100%" src={roomDetailData?.photos[index].file} />
+                  ) : (
+                    <Image objectFit={'cover'} w="100%" h="100%" src={BASIC_HOUSE_IMG} />
+                  )
+                ) : (
+                  <Image objectFit={'cover'} w="100%" h="100%" src={roomDetailData?.photos[index].file} />
+                )
               ) : null}
             </Skeleton>
           </GridItem>

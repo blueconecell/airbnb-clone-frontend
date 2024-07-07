@@ -99,3 +99,21 @@ export const uploadRoom = (variables: IUploadRoomVariables) =>
       },
     })
     .then((response) => response.data);
+
+export interface IUploadPhoto {
+  file: string;
+  description: string;
+  roomPK: number;
+}
+export const uploadPhoto = ({ file, description, roomPK }: IUploadPhoto) =>
+  instance
+    .post(
+      `/medias/photos/upload/${roomPK}`,
+      { file, description, roomPK },
+      {
+        headers: {
+          'X-CSRFToken': Cookie.get('csrftoken') || '',
+        },
+      }
+    )
+    .then((response) => response.data);

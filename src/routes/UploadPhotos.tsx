@@ -43,7 +43,7 @@ export default function UploadPhotos() {
     try {
       setLoading(true);
       const response = await axios.post(
-        'https://api.imgbb.com/1/upload?expiration=600&key=3a2dfa179a1e131d7f3c7b9089d5f67a',
+        'https://api.imgbb.com/1/upload?key=3a2dfa179a1e131d7f3c7b9089d5f67a',
         formData,
         {
           headers: {

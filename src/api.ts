@@ -7,7 +7,7 @@ const instance = axios.create({
   baseURL:
     process.env.NODE_ENV === 'development'
       ? 'http://127.0.0.1:8000/api/v1'
-      : 'https://backend.airbnbclonecodingtest.xyz/',
+      : 'https://backend.airbnbclonecodingtest.xyz/api/v1',
   withCredentials: true, // 백엔드 서버로부터 쿠키를 허용
 });
 
